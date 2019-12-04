@@ -1,4 +1,4 @@
-package com.Niek125.projectservice.controllers.config;
+package com.niek125.tokenservice.controllers.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

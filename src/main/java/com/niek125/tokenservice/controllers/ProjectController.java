@@ -3,6 +3,7 @@ package com.niek125.tokenservice.controllers;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -21,6 +22,7 @@ import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import static com.niek125.tokenservice.controllers.PemUtils.readPublicKeyFromFile;
 
@@ -74,11 +76,11 @@ public class ProjectController {
             exception.printStackTrace();
             return null;
         }
-        Permission[] perms = objectMapper.readValue(((jwt.getClaims()).get("pms")).asString(), Permission[].class);
+        Permission[] perms = objectMapper.readValue(jwt.getClaims().get("pms").asString(), Permission[].class);
         List<Project> projs = new ArrayList<>();
         for (Permission p :
                 perms) {
-            projs.add(projectRepo.getOne(p.getProjectid()));
+            projs.add(projectRepo.findById(p.getProjectid()).orElse(new Project("-", "Not found")));
         }
         String json = "[";
         for (int i = 0; i < projs.size(); i++) {

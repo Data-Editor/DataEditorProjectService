@@ -15,8 +15,4 @@ public class Project {
     @Id
     private String projectid;
     private String projectname;
-
-    public String toJSON(String aliasPID, String aliasPNM){
-        return "{\"" + aliasPID + "\":\"" + projectid + "\",\"" + aliasPNM + "\":\"" + projectname + "\"}";
-    }
 }

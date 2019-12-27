@@ -29,6 +29,3 @@ build/
 
 ### VS Code ###
 .vscode/
-
-src/main/resources/PublicKey.pem
-/projectservicekeystore.p12

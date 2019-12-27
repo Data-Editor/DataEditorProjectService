@@ -32,3 +32,4 @@ build/
 
 src/main/resources/PublicKey.pem
 /projectservicekeystore.p12
+projectproducer/src/main/resources/application.properties

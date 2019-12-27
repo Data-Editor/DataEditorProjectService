@@ -54,7 +54,7 @@ public class ProjectController {
     public List<Project> getProjects(@RequestHeader("Authorization") String token) throws JsonProcessingException {
         logger.info("verifying token");
         final DecodedJWT jwt = jwtVerifier.verify(token.replace("Bearer ", ""));
-        Permission[] perms = objectMapper.readValue(jwt.getClaims().get("pms").asString(), Permission[].class);
+        final Permission[] perms = objectMapper.readValue(jwt.getClaims().get("pms").asString(), Permission[].class);
         logger.info("getting projects");
         List<Project> projs = new ArrayList<>();
         for (Permission p :

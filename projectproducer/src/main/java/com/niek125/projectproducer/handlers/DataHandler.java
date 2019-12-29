@@ -9,7 +9,7 @@ public class DataHandler {
     public boolean validate(String data) {
         final DocumentContext doc = JsonPath.parse(data);
         if(!((doc.read("$.headers", DataHeader[].class).length > 0) &&
-                (doc.read("$.items", Object[].class).length > 0))){
+                (doc.read("$.items.length()", Integer.class) > 0))){
             return false;
         }
         return true;

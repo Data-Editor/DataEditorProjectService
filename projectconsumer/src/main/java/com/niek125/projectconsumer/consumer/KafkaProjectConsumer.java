@@ -46,5 +46,6 @@ public class KafkaProjectConsumer {
                 projectRepo.deleteById(project.getProjectid());
                 break;
         }
+        logger.info("successfully processed message");
     }
 }

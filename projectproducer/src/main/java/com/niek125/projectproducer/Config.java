@@ -24,6 +24,11 @@ import static com.niek125.projectproducer.utils.PemUtils.readPublicKeyFromFile;
 @Configuration
 public class Config {
     @Bean
+    public ObjectMapper objectMapper(){
+        return new ObjectMapper();
+    }
+
+    @Bean
     public RoleHandler roleHandler(){
         return new RoleHandler(new ObjectMapper());
     }

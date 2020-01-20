@@ -4,11 +4,11 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.JWTVerifier;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.niek125.projectproducer.handlers.DataHandler;
-import com.niek125.projectproducer.handlers.ProjectHandler;
-import com.niek125.projectproducer.handlers.RoleHandler;
 import com.niek125.projectproducer.kafka.KafkaProducer;
+import com.niek125.projectproducer.validators.DataValidator;
+import com.niek125.projectproducer.validators.ProjectValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -17,7 +17,6 @@ import org.springframework.web.multipart.support.StandardServletMultipartResolve
 
 import java.io.IOException;
 import java.security.interfaces.RSAPublicKey;
-import java.time.format.DateTimeFormatter;
 
 import static com.niek125.projectproducer.utils.PemUtils.readPublicKeyFromFile;
 
@@ -29,18 +28,13 @@ public class Config {
     }
 
     @Bean
-    public RoleHandler roleHandler(){
-        return new RoleHandler(new ObjectMapper());
+    public DataValidator dataHandler(){
+        return new DataValidator();
     }
 
     @Bean
-    public DataHandler dataHandler(){
-        return new DataHandler();
-    }
-
-    @Bean
-    public ProjectHandler projectHandler(){
-        return  new ProjectHandler(DateTimeFormatter.ofPattern("dd-MM-yyyy hh-mm"), new ObjectMapper());
+    public ProjectValidator projectHandler(){
+        return  new ProjectValidator();
     }
 
     @Bean
@@ -49,10 +43,16 @@ public class Config {
         return new KafkaProducer(template, new ObjectMapper());
     }
 
+    @Value("${com.niek125.publickey}")
+    private String publickey;
+
+    @Value("${com.niek125.allowed-token-signer}")
+    private String tokenSigner;
+
     @Bean
     public JWTVerifier jwtVerifier() throws IOException {
-        final Algorithm algorithm = Algorithm.RSA512((RSAPublicKey) readPublicKeyFromFile("project-service/src/main/resources/PublicKey.pem", "RSA"), null);
-        return JWT.require(algorithm).withIssuer("data-editor-token-service").build();
+        final Algorithm algorithm = Algorithm.RSA512((RSAPublicKey) readPublicKeyFromFile(publickey, "RSA"), null);
+        return JWT.require(algorithm).withIssuer(tokenSigner).build();
     }
 
     @Bean(name = "multipartResolver")
